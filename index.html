@@ -477,6 +477,7 @@
     .rain-bar:nth-child(4) { height: 18px; }
     .temp-big { font-size: 44px; }
     .station-badge { display: none; }
+    .cycle-mobile { display: block !important; }
     .widgets-grid { grid-template-columns: repeat(2, 1fr); }
     .main { padding: 16px; gap: 16px; }
     .forecast-card { min-width: 68px; padding: 10px 12px; }
@@ -548,7 +549,10 @@
         <button class="tab active" id="tabToday" onclick="switchTab('today')">Aujourd'hui</button>
         <button class="tab" id="tabWeek" onclick="switchTab('week')">Semaine</button>
       </div>
-      <div class="last-update" id="lastUpdate">--</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <div class="last-update" id="lastUpdate">--</div>
+        <div class="last-update" id="cycleCountMobile" style="display:none"></div>
+      </div>
     </div>
 
     <!-- Forecast strip -->
@@ -556,23 +560,10 @@
       <!-- filled by JS -->
     </div>
 
-    <!-- Section station -->
+    <!-- Section station active -->
     <div class="section-title">Capteurs disponibles</div>
 
-    <!-- Row 1: placeholders -->
-    <div class="widgets-grid">
-      <div class="widget placeholder">
-        <div class="placeholder-text">Capteur 2<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
-      </div>
-      <div class="widget placeholder">
-        <div class="placeholder-text">Capteur 3<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
-      </div>
-      <div class="widget placeholder">
-        <div class="placeholder-text">Capteur 4<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
-      </div>
-    </div>
-
-    <!-- Row 2: BME680 -->
+    <!-- Row 1: BME680 actif -->
     <div class="widgets-grid">
       <!-- Température -->
       <div class="widget clickable" onclick="openModal('temp')">
@@ -596,6 +587,22 @@
         <div class="widget-value" id="wGas">--<span class="widget-unit">kΩ</span></div>
         <div class="widget-sub" id="wGasSub">Résistance gaz</div>
         <div class="widget-dot" style="background:#6bc47a"></div>
+      </div>
+    </div>
+
+    <!-- Section capteurs futurs -->
+    <div class="section-title" style="margin-top:4px">Capteurs à venir</div>
+
+    <!-- Row 2: placeholders capteur extérieur -->
+    <div class="widgets-grid">
+      <div class="widget placeholder">
+        <div class="placeholder-text">Capteur ext. 1<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
+      </div>
+      <div class="widget placeholder">
+        <div class="placeholder-text">Capteur ext. 2<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
+      </div>
+      <div class="widget placeholder">
+        <div class="placeholder-text">Capteur ext. 3<br><span style="font-size:10px;color:var(--text3)">À venir</span></div>
       </div>
     </div>
 
@@ -626,8 +633,8 @@
 ══════════════════════════════════════════════ */
 const CONFIG = {
   thingspeak: {
-    channelId: '3262217',   // ex: 3262217
-    readKey:   'I109R62LC2LJXI8S',      // Read API Key ThingSpeak
+    channelId: 'TON_CHANNEL_ID',   // ex: 3262217
+    readKey:   'TA_CLE_READ',      // Read API Key ThingSpeak
   },
   // Coordonnées Champ-Saint-Père 85540
   lat: 46.5099,
@@ -756,6 +763,8 @@ async function fetchStation() {
     const mins = Math.round((Date.now() - updated) / 60000);
     document.getElementById('stationStatus').textContent = `En ligne · il y a ${mins} min`;
     document.getElementById('cycleCount').textContent = `Cycle #${cycles}`;
+    const mob = document.getElementById('cycleCountMobile');
+    if (mob) { mob.textContent = `Cycle #${cycles}`; mob.style.display = 'block'; }
     document.getElementById('lastUpdate').textContent = `Mis à jour ${updated.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
 
   } catch(e) {
