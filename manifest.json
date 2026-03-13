@@ -2,7 +2,7 @@
   "name": "Station Météo",
   "short_name": "Météo",
   "description": "Dashboard station météo BME680 + météo locale",
-  "start_url": "/index.html",
+  "start_url": "/station-meteo/index.html",
   "display": "standalone",
   "background_color": "#f0efe9",
   "theme_color": "#f7f7f5",
